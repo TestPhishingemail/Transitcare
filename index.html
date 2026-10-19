@@ -1,0 +1,1615 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111827">
+    <meta name="description" content="TransitCare vehicle maintenance information, wet-belt estimates and weather forecasts for van drivers.">
+    <title>TransitCare | Smart Van Maintenance</title>
+
+    <style>
+        :root {
+            --navy: #111827;
+            --navy-light: #1f2937;
+            --gold: #f5b82e;
+            --white: #ffffff;
+            --background: #f5f7fa;
+            --text: #263244;
+            --muted: #64748b;
+            --border: #dbe2ea;
+            --radius: 14px;
+            --shadow: 0 12px 35px rgba(17,24,39,.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--white);
+        }
+
+        h1, h2, h3, p {
+            margin-top: 0;
+        }
+
+        h1, h2, h3 {
+            line-height: 1.2;
+            color: var(--navy);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            letter-spacing: -1.5px;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+        }
+
+        a {
+            color: #916000;
+            text-underline-offset: 4px;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        button, select {
+            cursor: pointer;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        :focus-visible {
+            outline: 3px solid #b77900;
+            outline-offset: 4px;
+        }
+
+        .container {
+            width: min(1120px, 90%);
+            margin-inline: auto;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 10px;
+            z-index: 2000;
+            padding: 12px;
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .skip-link:focus {
+            top: 10px;
+        }
+
+        /* Navigation */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--navy);
+        }
+
+        .navbar {
+            min-height: 75px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--white);
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .9rem;
+        }
+
+        .brand-accent {
+            color: var(--gold);
+        }
+
+        .menu-toggle {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            padding: 10px;
+            border: 1px solid #64748b;
+            border-radius: 7px;
+            background: transparent;
+        }
+
+        .menu-toggle span {
+            height: 2px;
+            width: 100%;
+            background: white;
+        }
+
+        .primary-nav {
+            display: none;
+            position: absolute;
+            top: 75px;
+            left: 0;
+            right: 0;
+            padding: 15px 5%;
+            background: var(--navy);
+        }
+
+        .primary-nav.is-open {
+            display: block;
+        }
+
+        .primary-nav ul {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .primary-nav a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .primary-nav a:hover {
+            background: #273449;
+            color: var(--gold);
+        }
+
+        .primary-nav .nav-cta {
+            color: var(--navy);
+            background: var(--gold);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Buttons */
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: .2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .button-primary:hover {
+            background: #ffd166;
+        }
+
+        .button-outline {
+            border-color: #94a3b8;
+            background: transparent;
+            color: white;
+        }
+
+        .button-full {
+            width: 100%;
+        }
+
+        /* Hero */
+
+        .hero {
+            padding: 70px 0;
+            background:
+                radial-gradient(circle at 90% 15%, #334155, transparent 40%),
+                var(--navy);
+            color: white;
+        }
+
+        .hero-grid {
+            display: grid;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            color: #916000;
+            font-size: .78rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .hero .eyebrow,
+        .weather-section .eyebrow {
+            color: var(--gold);
+        }
+
+        .hero h1 {
+            color: white;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero-description {
+            max-width: 650px;
+            color: #d1d9e5;
+            font-size: 1.05rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 25px 0;
+        }
+
+        .hero-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 25px;
+            padding-left: 20px;
+            color: #e2e8f0;
+        }
+
+        .hero-card {
+            padding: 28px;
+            border: 1px solid #475569;
+            border-radius: var(--radius);
+            background: rgba(255,255,255,.06);
+        }
+
+        .van-illustration {
+            display: grid;
+            place-items: center;
+            min-height: 160px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg,#334155,#1f2937);
+            font-size: 6rem;
+        }
+
+        .hero-card h2 {
+            color: white;
+            font-size: 1.7rem;
+        }
+
+        .hero-card p {
+            color: #d1d9e5;
+        }
+
+        .card-label {
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .hero-card .card-label {
+            color: var(--gold);
+        }
+
+        /* General sections */
+
+        .trust-strip {
+            padding: 22px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trust-grid {
+            display: grid;
+            gap: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .trust-grid span {
+            color: #15803d;
+        }
+
+        .section {
+            padding: 70px 0;
+        }
+
+        .section-heading {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            text-align: center;
+        }
+
+        .section-heading > p:last-child {
+            color: var(--muted);
+        }
+
+        .service-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .service-card {
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: .2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card p {
+            color: var(--muted);
+        }
+
+        .service-icon {
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            background: #fff4d7;
+            font-size: 1.8rem;
+        }
+
+        .text-link {
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* Weather API */
+
+        .weather-section {
+            background: var(--navy);
+            color: white;
+        }
+
+        .weather-layout {
+            display: grid;
+            gap: 35px;
+            align-items: start;
+        }
+
+        .weather-section h2 {
+            color: white;
+        }
+
+        .weather-intro > p:not(.eyebrow) {
+            color: #d1d9e5;
+        }
+
+        .feature-list {
+            padding-left: 22px;
+        }
+
+        .small-note {
+            color: var(--muted);
+            font-size: .85rem;
+        }
+
+        .weather-section .small-note {
+            color: #cbd5e1;
+        }
+
+        .weather-panel {
+            padding: 25px;
+            border-radius: var(--radius);
+            background: white;
+            color: var(--text);
+        }
+
+        label, legend {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input:not([type="radio"]):not([type="checkbox"]),
+        select,
+        textarea {
+            width: 100%;
+            min-height: 48px;
+            padding: 11px 13px;
+            border: 1px solid #aab6c5;
+            border-radius: 7px;
+            background: white;
+            color: var(--text);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .weather-search {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .field-hint {
+            color: var(--muted);
+            font-size: .83rem;
+        }
+
+        .status-message {
+            margin-top: 12px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .status-message:empty {
+            display: none;
+        }
+
+        .status-message[data-state="error"] {
+            color: #b42318;
+        }
+
+        .status-message[data-state="success"] {
+            color: #166534;
+        }
+
+        .weather-result {
+            margin-top: 25px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .weather-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .weather-top h3 {
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+
+        .weather-top p:not(.card-label) {
+            color: var(--muted);
+        }
+
+        .temperature {
+            color: var(--navy);
+            font-size: 2.8rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .weather-stats {
+            display: grid;
+            grid-template-columns: repeat(3,minmax(0,1fr));
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .weather-stat {
+            padding: 12px 5px;
+            border-radius: 8px;
+            background: var(--background);
+            text-align: center;
+        }
+
+        .weather-stat span,
+        .weather-stat strong {
+            display: block;
+        }
+
+        .weather-stat span {
+            color: var(--muted);
+            font-size: .72rem;
+        }
+
+        .weather-stat strong {
+            margin-top: 5px;
+            font-size: .9rem;
+            overflow-wrap: anywhere;
+        }
+
+        .updated-text {
+            margin-top: 15px;
+            color: var(--muted);
+            font-size: .8rem;
+        }
+
+        /* Cost estimator */
+
+        .maintenance-section {
+            background: var(--background);
+        }
+
+        .estimator {
+            display: grid;
+            gap: 25px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .estimator-form > label {
+            margin-top: 15px;
+        }
+
+        .estimator-form > label:first-child {
+            margin-top: 0;
+        }
+
+        .estimator-form .button {
+            margin-top: 20px;
+        }
+
+        .estimate-result {
+            padding: 25px;
+            border-radius: 12px;
+            background: var(--navy);
+            color: white;
+        }
+
+        .estimate-result .card-label {
+            color: var(--gold);
+        }
+
+        .estimate-price {
+            margin: 10px 0;
+            color: var(--gold);
+            font-size: clamp(1.8rem,6vw,2.7rem);
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .estimate-result .small-note {
+            color: #cbd5e1;
+        }
+
+        .info-banner {
+            margin-top: 25px;
+            padding: 18px;
+            border-left: 4px solid #d99a0b;
+            border-radius: 5px;
+            background: #fff4d7;
+            color: #422f0a;
+        }
+
+        /* Contact form */
+
+        .contact-layout {
+            display: grid;
+            gap: 35px;
+            align-items: start;
+        }
+
+        .contact-intro > p:not(.eyebrow) {
+            color: var(--muted);
+        }
+
+        .contact-highlight {
+            margin-top: 25px;
+            padding: 20px;
+            border-left: 4px solid var(--gold);
+            background: var(--background);
+        }
+
+        .contact-highlight p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .contact-form {
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .form-row {
+            display: grid;
+            gap: 18px;
+        }
+
+        .form-field {
+            min-width: 0;
+            margin-bottom: 18px;
+        }
+
+        fieldset.form-field {
+            padding: 0;
+            border: 0;
+        }
+
+        fieldset legend {
+            padding: 0;
+        }
+
+        .radio-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .choice {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            font-weight: normal;
+        }
+
+        .choice input {
+            width: 18px;
+            height: 18px;
+            margin-top: 4px;
+            accent-color: #916000;
+        }
+
+        .consent-choice {
+            margin: 12px 0 20px;
+        }
+
+        .enquiry-result {
+            margin-top: 22px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--background);
+        }
+
+        .enquiry-result > p {
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        .enquiry-result dl {
+            display: grid;
+            gap: 4px;
+        }
+
+        .enquiry-result dt {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+        .enquiry-result dd {
+            margin: 0;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .enquiry-result .button-outline {
+            color: var(--navy);
+            border-color: var(--navy);
+        }
+
+        /* Footer */
+
+        .site-footer {
+            padding: 40px 0;
+            background: var(--navy);
+            color: #d1d9e5;
+            text-align: center;
+        }
+
+        .footer-brand {
+            margin-bottom: 15px;
+        }
+
+        .footer-small {
+            color: #cbd5e1;
+            font-size: .83rem;
+        }
+
+        .site-footer a:not(.brand) {
+            color: var(--gold);
+        }
+
+        /* Tablet */
+
+        @media (min-width: 650px) {
+            .hero {
+                padding: 95px 0;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1.25fr .75fr;
+            }
+
+            .trust-grid {
+                grid-template-columns: repeat(3,1fr);
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(2,minmax(0,1fr));
+            }
+
+            .weather-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .weather-search {
+                flex-direction: row;
+            }
+
+            .weather-search input {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .estimator {
+                grid-template-columns: 1fr 1fr;
+                padding: 35px;
+            }
+
+            .contact-layout {
+                grid-template-columns: .8fr 1.2fr;
+            }
+
+            .form-row {
+                grid-template-columns: repeat(2,minmax(0,1fr));
+            }
+        }
+
+        /* Desktop */
+
+        @media (min-width: 850px) {
+            .menu-toggle {
+                display: none;
+            }
+
+            .primary-nav {
+                display: block;
+                position: static;
+                padding: 0;
+                background: transparent;
+            }
+
+            .primary-nav ul {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(3,minmax(0,1fr));
+            }
+
+            .section {
+                padding: 90px 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *, *::before, *::after {
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+        <div class="container navbar">
+            <a class="brand" href="#home" aria-label="TransitCare home">
+                <span class="brand-icon" aria-hidden="true">TC</span>
+                Transit<span class="brand-accent">Care</span>
+            </a>
+
+            <button class="menu-toggle" id="menu-toggle"
+                    aria-expanded="false" aria-controls="primary-nav"
+                    aria-label="Open navigation menu">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav id="primary-nav" class="primary-nav" aria-label="Main navigation">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#weather">Weather</a></li>
+                    <li><a href="#maintenance">Maintenance</a></li>
+                    <li><a class="nav-cta" href="#contact">Get a quote</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+                <div>
+                    <p class="eyebrow">SMARTER VAN OWNERSHIP</p>
+                    <h1>Keep your van ready for <span>the road.</span></h1>
+                    <p class="hero-description">
+                        Explore maintenance services, estimate wet-belt
+                        replacement costs and check local weather conditions
+                        before your next journey.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="#maintenance">
+                            Explore maintenance
+                        </a>
+                        <a class="button button-outline" href="#weather">
+                            Check the weather
+                        </a>
+                    </div>
+
+                    <ul class="hero-points">
+                        <li>Clear price estimates</li>
+                        <li>Useful weather information</li>
+                        <li>Mobile-friendly design</li>
+                    </ul>
+                </div>
+
+                <div class="hero-card">
+                    <div class="van-illustration" aria-hidden="true">🚐</div>
+                    <p class="card-label">YOUR VAN. YOUR JOURNEY.</p>
+                    <h2>Plan ahead. Drive prepared.</h2>
+                    <p>Use our tools to help plan your vehicle maintenance.</p>
+                    <a class="text-link" href="#services">Discover our services →</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="trust-strip" aria-label="Website features">
+            <div class="container trust-grid">
+                <div><span aria-hidden="true">✓</span> Responsive design</div>
+                <div><span aria-hidden="true">✓</span> Interactive tools</div>
+                <div><span aria-hidden="true">✓</span> Live API data</div>
+            </div>
+        </section>
+
+        <section class="section" id="services">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">WHAT YOU CAN DO</p>
+                    <h2>Vehicle care made simpler</h2>
+                    <p>Explore information to help you look after your van.</p>
+                </div>
+
+                <div class="service-grid">
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">🔧</div>
+                        <h3>Wet-belt information</h3>
+                        <p>Learn why timing-belt maintenance matters and what to ask a garage.</p>
+                        <a class="text-link" href="#maintenance">Explore maintenance →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">🌦️</div>
+                        <h3>Weather checker</h3>
+                        <p>Retrieve weather information for a town or city using a third-party API.</p>
+                        <a class="text-link" href="#weather">Check weather →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">📋</div>
+                        <h3>Maintenance enquiry</h3>
+                        <p>Enter your vehicle details and prepare an enquiry summary.</p>
+                        <a class="text-link" href="#contact">Make an enquiry →</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section weather-section" id="weather">
+            <div class="container weather-layout">
+                <div class="weather-intro">
+                    <p class="eyebrow">THIRD-PARTY API INTEGRATION</p>
+                    <h2>Check the weather before you drive</h2>
+                    <p>
+                        Enter a town or city. TransitCare uses the Open-Meteo
+                        geocoding and weather APIs to retrieve location-specific
+                        forecast data.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Current temperature</li>
+                        <li>Feels-like temperature</li>
+                        <li>Wind speed</li>
+                        <li>Chance of rain</li>
+                    </ul>
+                    <p class="small-note">
+                        Weather information is for planning purposes and does
+                        not guarantee safe driving conditions.
+                    </p>
+                </div>
+
+                <div class="weather-panel">
+                    <form id="weather-form">
+                        <label for="weather-location">Town or city</label>
+                        <div class="weather-search">
+                            <input type="text" id="weather-location"
+                                   name="location" value="Leeds"
+                                   placeholder="e.g. Leeds" required
+                                   minlength="2" maxlength="80">
+                            <button class="button button-primary" type="submit">
+                                Search
+                            </button>
+                        </div>
+                        <p class="field-hint">Try Leeds, London or Manchester.</p>
+                    </form>
+
+                    <div id="weather-status" class="status-message"
+                         role="status" aria-live="polite"></div>
+
+                    <div id="weather-result" class="weather-result" hidden>
+                        <div class="weather-top">
+                            <div>
+                                <p class="card-label">FORECAST LOCATION</p>
+                                <h3 id="weather-city">Leeds</h3>
+                                <p id="weather-description">Weather conditions</p>
+                            </div>
+                            <div class="temperature" id="weather-temperature">--°</div>
+                        </div>
+
+                        <div class="weather-stats">
+                            <div class="weather-stat">
+                                <span>Feels like</span>
+                                <strong id="weather-feels">--°C</strong>
+                            </div>
+                            <div class="weather-stat">
+                                <span>Wind speed</span>
+                                <strong id="weather-wind">-- km/h</strong>
+                            </div>
+                            <div class="weather-stat">
+                                <span>Rain chance</span>
+                                <strong id="weather-rain">--%</strong>
+                            </div>
+                        </div>
+                        <p class="updated-text" id="weather-updated"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section maintenance-section" id="maintenance">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">MAINTENANCE PLANNER</p>
+                    <h2>Wet-belt cost estimator</h2>
+                    <p>
+                        Select your vehicle details to view an illustrative
+                        starting estimate, not a confirmed quotation.
+                    </p>
+                </div>
+
+                <div class="estimator">
+                    <div class="estimator-form">
+                        <label for="vehicle-model">Vehicle</label>
+                        <select id="vehicle-model" name="vehicle-model">
+                            <option value="transit">Ford Transit</option>
+                            <option value="custom">Ford Transit Custom</option>
+                            <option value="other">Other / not sure</option>
+                        </select>
+
+                        <label for="drivetrain">Drivetrain</label>
+                        <select id="drivetrain" name="drivetrain">
+                            <option value="fwd">Front-wheel drive (FWD)</option>
+                            <option value="rwd">Rear-wheel drive (RWD)</option>
+                            <option value="unknown">Not sure</option>
+                        </select>
+
+                        <label for="engine">Engine</label>
+                        <select id="engine" name="engine">
+                            <option value="ecoblue">2.0 EcoBlue diesel</option>
+                            <option value="unknown">Not sure / other engine</option>
+                        </select>
+
+                        <button type="button" id="estimate-button"
+                                class="button button-primary button-full">
+                            Calculate estimate
+                        </button>
+                    </div>
+
+                    <div class="estimate-result" aria-live="polite" aria-atomic="true">
+                        <p class="card-label">ILLUSTRATIVE PRICE</p>
+                        <p class="estimate-price" id="estimate-price">£950–£1,250</p>
+                        <p id="estimate-description">
+                            Example estimate for a compatible 2.0 EcoBlue FWD vehicle.
+                        </p>
+                        <p class="small-note">
+                            These are example figures, not verified current garage
+                            prices. Confirm compatibility, parts, labour and VAT
+                            with a specialist.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="info-banner">
+                    <strong>Important:</strong>
+                    The correct replacement procedure depends on the exact engine.
+                    Ask a qualified technician to confirm compatibility and follow
+                    the manufacturer's service guidance.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contact">
+            <div class="container contact-layout">
+                <div class="contact-intro">
+                    <p class="eyebrow">GET IN TOUCH</p>
+                    <h2>Prepare a maintenance enquiry</h2>
+                    <p>
+                        Complete the form to create a summary of your vehicle
+                        and the service you are interested in.
+                    </p>
+                    <div class="contact-highlight">
+                        <strong>TransitCare coursework project</strong>
+                        <p>This demonstration does not represent a real garage booking service.</p>
+                    </div>
+                </div>
+
+                <form id="maintenance-form" class="contact-form">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="customer-name">Full name *</label>
+                            <input type="text" id="customer-name"
+                                   name="customerName" autocomplete="name"
+                                   required minlength="2" maxlength="80"
+                                   placeholder="Your name">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="customer-email">Email address *</label>
+                            <input type="email" id="customer-email" name="email"
+                                   autocomplete="email" required
+                                   placeholder="you@example.com">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="registration">Vehicle registration</label>
+                            <input type="text" id="registration"
+                                   name="registration" maxlength="15"
+                                   placeholder="e.g. AB12 CDE">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="service-type">Service required *</label>
+                            <select id="service-type" name="service" required>
+                                <option value="">Select a service</option>
+                                <option value="Wet-belt replacement">Wet-belt replacement</option>
+                                <option value="Oil and filter service">Oil and filter service</option>
+                                <option value="Vehicle inspection">Vehicle inspection</option>
+                                <option value="General maintenance">General maintenance</option>
+                                <option value="Other enquiry">Other enquiry</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <fieldset class="form-field">
+                        <legend>Vehicle type *</legend>
+                        <div class="radio-options">
+                            <label class="choice">
+                                <input type="radio" name="vehicleType"
+                                       value="Ford Transit" required>
+                                Ford Transit
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="vehicleType"
+                                       value="Transit Custom">
+                                Transit Custom
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="vehicleType"
+                                       value="Other">
+                                Other
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-field">
+                        <label for="message">Additional details</label>
+                        <textarea id="message" name="message" rows="4"
+                                  maxlength="1000"
+                                  placeholder="Describe the maintenance you need..."></textarea>
+                    </div>
+
+                    <label class="choice consent-choice" for="consent">
+                        <input type="checkbox" id="consent" name="consent" required>
+                        I agree to use my details to prepare this enquiry summary. *
+                    </label>
+
+                    <button class="button button-primary button-full" type="submit">
+                        Create enquiry summary
+                    </button>
+
+                    <div id="form-status" class="status-message"
+                         role="status" aria-live="polite"></div>
+
+                    <div id="enquiry-result" class="enquiry-result" hidden>
+                        <h3>Enquiry summary</h3>
+                        <p>Your details have been formatted below. No information
+                           has been sent to a garage or saved to a server.</p>
+                        <dl id="enquiry-details"></dl>
+                        <button type="button" class="button button-outline"
+                                id="copy-enquiry">
+                            Copy summary
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <a class="brand footer-brand" href="#home">
+                Transit<span class="brand-accent">Care</span>
+            </a>
+            <p>Vehicle maintenance information and weather tools for van drivers.</p>
+            <p class="footer-small">
+                Student project. Prices are illustrative and this website
+                does not provide vehicle diagnostics.
+            </p>
+            <p class="footer-small">
+                Weather data provided by
+                <a href="https://open-meteo.com/" target="_blank"
+                   rel="noopener noreferrer">Open-Meteo</a>.
+            </p>
+            <p class="footer-small">&copy; <span id="current-year">2026</span> TransitCare</p>
+        </div>
+    </footer>
+
+    <script>
+        "use strict";
+
+        /* MOBILE NAVIGATION */
+
+        const menuToggle = document.querySelector("#menu-toggle");
+        const primaryNav = document.querySelector("#primary-nav");
+
+        function closeMenu() {
+            primaryNav.classList.remove("is-open");
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Open navigation menu");
+        }
+
+        menuToggle.addEventListener("click", () => {
+            const isOpen =
+                menuToggle.getAttribute("aria-expanded") === "true";
+
+            primaryNav.classList.toggle("is-open", !isOpen);
+            menuToggle.setAttribute("aria-expanded", String(!isOpen));
+            menuToggle.setAttribute(
+                "aria-label",
+                isOpen ? "Open navigation menu" : "Close navigation menu"
+            );
+        });
+
+        primaryNav.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", closeMenu);
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeMenu();
+            }
+        });
+
+        document.querySelector("#current-year").textContent =
+            new Date().getFullYear();
+
+        /* STATUS MESSAGES */
+
+        function setStatus(element, message, state = "") {
+            element.textContent = message;
+
+            if (state) {
+                element.dataset.state = state;
+            } else {
+                delete element.dataset.state;
+            }
+        }
+
+        /* WEATHER API: GEOCODING AND FORECAST */
+
+        const weatherForm = document.querySelector("#weather-form");
+        const weatherLocation = document.querySelector("#weather-location");
+        const weatherStatus = document.querySelector("#weather-status");
+        const weatherResult = document.querySelector("#weather-result");
+        const weatherButton = weatherForm.querySelector('button[type="submit"]');
+
+        const weatherFields = {
+            city: document.querySelector("#weather-city"),
+            description: document.querySelector("#weather-description"),
+            temperature: document.querySelector("#weather-temperature"),
+            feels: document.querySelector("#weather-feels"),
+            wind: document.querySelector("#weather-wind"),
+            rain: document.querySelector("#weather-rain"),
+            updated: document.querySelector("#weather-updated")
+        };
+
+        function weatherDescription(code) {
+            const descriptions = {
+                0: "Clear sky",
+                1: "Mainly clear",
+                2: "Partly cloudy",
+                3: "Overcast",
+                45: "Fog",
+                48: "Depositing rime fog",
+                51: "Light drizzle",
+                53: "Moderate drizzle",
+                55: "Dense drizzle",
+                56: "Light freezing drizzle",
+                57: "Dense freezing drizzle",
+                61: "Slight rain",
+                63: "Moderate rain",
+                65: "Heavy rain",
+                66: "Light freezing rain",
+                67: "Heavy freezing rain",
+                71: "Slight snowfall",
+                73: "Moderate snowfall",
+                75: "Heavy snowfall",
+                77: "Snow grains",
+                80: "Slight rain showers",
+                81: "Moderate rain showers",
+                82: "Violent rain showers",
+                85: "Slight snow showers",
+                86: "Heavy snow showers",
+                95: "Thunderstorm",
+                96: "Thunderstorm with slight hail",
+                99: "Thunderstorm with heavy hail"
+            };
+
+            return descriptions[code] ?? "Conditions unavailable";
+        }
+
+        async function checkWeather(city) {
+            const cleanCity = city.trim();
+
+            if (cleanCity.length < 2) {
+                setStatus(weatherStatus,
+                    "Please enter a town or city.", "error");
+                weatherLocation.focus();
+                return;
+            }
+
+            weatherButton.disabled = true;
+            weatherResult.hidden = true;
+            setStatus(weatherStatus, "Searching for location...");
+
+            try {
+                // API CALL 1: Find coordinates for the entered location.
+                const geocodingUrl = new URL(
+                    "https://geocoding-api.open-meteo.com/v1/search"
+                );
+
+                geocodingUrl.search = new URLSearchParams({
+                    name: cleanCity,
+                    count: "1",
+                    language: "en",
+                    format: "json"
+                });
+
+                const locationResponse = await fetch(geocodingUrl);
+
+                if (!locationResponse.ok) {
+                    throw new Error("The location service is unavailable.");
+                }
+
+                const locationData = await locationResponse.json();
+                const place = locationData.results?.[0];
+
+                if (!place) {
+                    throw new Error(
+                        "Location not found. Try another town or city."
+                    );
+                }
+
+                setStatus(weatherStatus,
+                    "Location found. Retrieving weather...");
+
+                // API CALL 2: Request weather using the returned coordinates.
+                const forecastUrl = new URL(
+                    "https://api.open-meteo.com/v1/forecast"
+                );
+
+                forecastUrl.search = new URLSearchParams({
+                    latitude: String(place.latitude),
+                    longitude: String(place.longitude),
+                    current:
+                        "temperature_2m,apparent_temperature,weather_code,wind_speed_10m",
+                    hourly: "precipitation_probability",
+                    forecast_days: "1",
+                    timezone: "auto"
+                });
+
+                const forecastResponse = await fetch(forecastUrl);
+
+                if (!forecastResponse.ok) {
+                    throw new Error("Unable to retrieve the weather forecast.");
+                }
+
+                const forecast = await forecastResponse.json();
+                const current = forecast.current;
+
+                if (!current) {
+                    throw new Error("Current weather data is unavailable.");
+                }
+
+                // Match the forecast hour to the current observation time.
+                const times = forecast.hourly?.time ?? [];
+                const hour = current.time.slice(0, 13);
+                let hourIndex = times.findIndex(
+                    time => time.slice(0, 13) === hour
+                );
+
+                if (hourIndex < 0 && times.length > 0) {
+                    hourIndex = 0;
+                }
+
+                const rainChance = hourIndex >= 0
+                    ? forecast.hourly?.precipitation_probability?.[hourIndex]
+                    : null;
+
+                const locationLabel = [
+                    place.name,
+                    place.admin1,
+                    place.country
+                ].filter(Boolean)
+                 .filter((value, index, values) =>
+                     values.indexOf(value) === index)
+                 .join(", ");
+
+                weatherFields.city.textContent = locationLabel;
+                weatherFields.description.textContent =
+                    weatherDescription(current.weather_code);
+
+                weatherFields.temperature.textContent =
+                    `${Math.round(current.temperature_2m)}°C`;
+
+                weatherFields.feels.textContent =
+                    `${Math.round(current.apparent_temperature)}°C`;
+
+                weatherFields.wind.textContent =
+                    `${Math.round(current.wind_speed_10m)} km/h`;
+
+                weatherFields.rain.textContent =
+                    rainChance == null ? "Unavailable" : `${rainChance}%`;
+
+                weatherFields.updated.textContent =
+                    `Forecast time: ${current.time.replace("T", " ")} ` +
+                    `${forecast.timezone_abbreviation ?? forecast.timezone ?? ""}`;
+
+                weatherResult.hidden = false;
+                setStatus(weatherStatus,
+                    "Weather data loaded successfully.", "success");
+
+            } catch (error) {
+                console.error("Weather API error:", error);
+
+                setStatus(
+                    weatherStatus,
+                    error instanceof TypeError
+                        ? "Connection failed. Check your internet and try again."
+                        : error.message,
+                    "error"
+                );
+            } finally {
+                weatherButton.disabled = false;
+            }
+        }
+
+        weatherForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            if (weatherForm.reportValidity()) {
+                checkWeather(weatherLocation.value);
+            }
+        });
+
+        // Display a default forecast when the page opens.
+        checkWeather("Leeds");
+
+        /* WET-BELT COST ESTIMATOR */
+
+        const estimateButton = document.querySelector("#estimate-button");
+        const vehicleModel = document.querySelector("#vehicle-model");
+        const drivetrain = document.querySelector("#drivetrain");
+        const engine = document.querySelector("#engine");
+        const estimatePrice = document.querySelector("#estimate-price");
+        const estimateDescription =
+            document.querySelector("#estimate-description");
+
+        function calculateEstimate() {
+            const drive = drivetrain.value;
+            const selectedEngine = engine.value;
+            const vehicle = vehicleModel.value;
+
+            if (selectedEngine !== "ecoblue") {
+                estimatePrice.textContent = "Quote required";
+                estimateDescription.textContent =
+                    "Confirm the exact engine with a specialist before estimating the cost.";
+                return;
+            }
+
+            if (vehicle === "other") {
+                estimatePrice.textContent = "Quote required";
+                estimateDescription.textContent =
+                    "These illustrative prices are for compatible Ford Transit models.";
+                return;
+            }
+
+            if (drive === "unknown") {
+                estimatePrice.textContent = "£950–£1,350";
+                estimateDescription.textContent =
+                    "Illustrative range while the drivetrain is unknown.";
+                return;
+            }
+
+            if (drive === "fwd") {
+                estimatePrice.textContent = "£950–£1,250";
+                estimateDescription.textContent =
+                    "Illustrative range for a compatible 2.0 EcoBlue FWD van.";
+            } else {
+                estimatePrice.textContent = "£1,050–£1,350";
+                estimateDescription.textContent =
+                    "Illustrative range for a compatible 2.0 EcoBlue RWD van.";
+            }
+        }
+
+        estimateButton.addEventListener("click", calculateEstimate);
+
+        [vehicleModel, drivetrain, engine].forEach(control => {
+            control.addEventListener("change", calculateEstimate);
+        });
+
+        /* MAINTENANCE ENQUIRY FORM */
+
+        const maintenanceForm =
+            document.querySelector("#maintenance-form");
+        const formStatus = document.querySelector("#form-status");
+        const enquiryResult = document.querySelector("#enquiry-result");
+        const enquiryDetails = document.querySelector("#enquiry-details");
+        const copyEnquiryButton = document.querySelector("#copy-enquiry");
+
+        let enquirySummary = "";
+
+        maintenanceForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            if (!maintenanceForm.reportValidity()) {
+                return;
+            }
+
+            const data = new FormData(maintenanceForm);
+
+            const name = String(data.get("customerName") ?? "").trim();
+            const email = String(data.get("email") ?? "").trim();
+            const registration =
+                String(data.get("registration") ?? "").trim().toUpperCase();
+            const service = String(data.get("service") ?? "");
+            const vehicleType = String(data.get("vehicleType") ?? "");
+            const message = String(data.get("message") ?? "").trim();
+
+            if (name.length < 2) {
+                setStatus(formStatus,
+                    "Please enter your full name.", "error");
+                document.querySelector("#customer-name").focus();
+                return;
+            }
+
+            const items = [
+                ["Name", name],
+                ["Email", email],
+                ["Vehicle registration", registration || "Not provided"],
+                ["Vehicle type", vehicleType],
+                ["Service requested", service],
+                ["Additional details", message || "None"]
+            ];
+
+            enquiryDetails.replaceChildren();
+
+            items.forEach(([label, value]) => {
+                const term = document.createElement("dt");
+                const description = document.createElement("dd");
+
+                term.textContent = label;
+                description.textContent = value;
+
+                enquiryDetails.append(term, description);
+            });
+
+            enquirySummary = items
+                .map(([label, value]) => `${label}: ${value}`)
+                .join("\n");
+
+            enquiryResult.hidden = false;
+
+            setStatus(
+                formStatus,
+                "Enquiry summary created. It has not been sent to a garage.",
+                "success"
+            );
+
+            enquiryResult.scrollIntoView({
+                behavior: window.matchMedia(
+                    "(prefers-reduced-motion: reduce)"
+                ).matches ? "auto" : "smooth",
+                block: "nearest"
+            });
+        });
+
+        /* COPY ENQUIRY */
+
+        copyEnquiryButton.addEventListener("click", async () => {
+            if (!enquirySummary) {
+                setStatus(formStatus,
+                    "Create an enquiry summary first.", "error");
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(enquirySummary);
+
+                setStatus(formStatus,
+                    "Enquiry summary copied to your clipboard.", "success");
+            } catch (error) {
+                console.error("Clipboard error:", error);
+
+                setStatus(formStatus,
+                    "Copying was blocked. Select and copy the summary manually.",
+                    "error");
+            }
+        });
+    </script>
+</body>
+</html>
